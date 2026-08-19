@@ -252,7 +252,12 @@ function init_konekpay_gateway_class() {
                     'redirect' => '#konekpay-token-' . $body['data']['token'] . '&thankyou=' . urlencode( $order->get_checkout_order_received_url() )
                 );
             } else {
-                $error_msg = isset($body['error']['message']) ? $body['error']['message'] : 'Gagal memproses pembuatan sesi pembayaran.';
+                $error_msg = 'Gagal memproses pembuatan sesi pembayaran.';
+                if ( isset( $body['message'] ) ) {
+                    $error_msg = $body['message'];
+                } elseif ( isset( $body['error']['message'] ) ) {
+                    $error_msg = $body['error']['message'];
+                }
                 wc_add_notice( 'Konekpay Error: ' . $error_msg, 'error' );
                 return;
             }
